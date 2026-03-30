@@ -1,0 +1,28 @@
+{
+  "email": {
+    "enabled": true,
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "sender": "san911207@gmail.com",
+    "app_password": "dhbvnbzfxarbbvso",
+    "recipient": "san911207@gmail.com"
+  },
+  "imessage": {
+    "enabled": true,
+    "phone": "+12187306333"
+  },
+  "github_pages": {
+    "enabled": true,
+    "repo": "san911207/spy-reports",
+    "branch": "main",
+    "base_url": "https://san911207.github.io/spy-reports"
+  },
+  "kakao_share": {
+    "enabled": true,
+    "save_image": true,
+    "copy_to_clipboard": true
+  },
+  "save_html": true,
+  "open_browser": false,
+  "timezone": "America/New_York"
+}
