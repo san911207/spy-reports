@@ -2,9 +2,13 @@ name: SPY Auto Report
 
 on:
   schedule:
-    - cron: '0 14 * * 1-5'
+    - cron: '0 13 * * 1-5'
+    - cron: '30 14 * * 1-5'
+    - cron: '30 16 * * 1-5'
     - cron: '30 17 * * 1-5'
-    - cron: '0 2 * * 2-6'
+    - cron: '0 19 * * 1-5'
+    - cron: '0 22 * * 1-5'
+    - cron: '0 1 * * 2-6'
   workflow_dispatch:
 
 jobs:
@@ -21,8 +25,13 @@ jobs:
         id: session
         run: |
           HOUR=$(TZ=America/New_York date +%H)
-          if [ "$HOUR" -lt 10 ]; then echo "session=pre" >> $GITHUB_OUTPUT
-          elif [ "$HOUR" -lt 16 ]; then echo "session=mid" >> $GITHUB_OUTPUT
+          MIN=$(TZ=America/New_York date +%M)
+          TIME="${HOUR}${MIN}"
+          if [ "$TIME" -lt "1000" ]; then echo "session=pre" >> $GITHUB_OUTPUT
+          elif [ "$TIME" -lt "1200" ]; then echo "session=mid" >> $GITHUB_OUTPUT
+          elif [ "$TIME" -lt "1430" ]; then echo "session=mid" >> $GITHUB_OUTPUT
+          elif [ "$TIME" -lt "1600" ]; then echo "session=mid" >> $GITHUB_OUTPUT
+          elif [ "$TIME" -lt "2000" ]; then echo "session=post" >> $GITHUB_OUTPUT
           else echo "session=post" >> $GITHUB_OUTPUT; fi
       - name: Run report
         env:
@@ -35,9 +44,10 @@ jobs:
           mkdir -p docs/archive
           cp reports/latest.html docs/index.html
           cp reports/latest.html docs/${{ steps.session.outputs.session }}.html
-          cp reports/latest.html docs/archive/spy_${{ steps.session.outputs.session }}_$(date +%Y%m%d_%H%M).html
+          TIMESTAMP=$(TZ=America/New_York date +%Y%m%d_%H%M)
+          cp reports/latest.html docs/archive/spy_${TIMESTAMP}.html
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add docs/
-          git commit -m "SPY ${{ steps.session.outputs.session }} report $(date +%Y%m%d_%H%M)" --allow-empty
+          git commit -m "SPY report $TIMESTAMP" --allow-empty
           git push
